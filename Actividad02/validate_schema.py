@@ -41,7 +41,7 @@ def validate_database():
     )
     cursor = conn.cursor()
     
-    report_lines = ["# 📊 Reporte de Validación de Base de Datos\n"]
+    report_lines = ["# 📊 Reporte de Validación de Jardineria\n"]
 
     # Verificar tablas
     cursor.execute("SHOW TABLES;")
