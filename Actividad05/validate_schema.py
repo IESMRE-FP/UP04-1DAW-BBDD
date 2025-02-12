@@ -34,6 +34,8 @@ def validate_database():
     cursor = conn.cursor()
     
     report_lines = ["# 📊 Reporte de Validación de Películas\n"]
+    # Pregunta 1: Verificar que las tablas fueron creadas
+    report_lines.append("\n## 1️⃣ Verificación de Creación de Tablas")
 
     # Verificar tablas
     cursor.execute("SHOW TABLES;")
@@ -68,9 +70,91 @@ def validate_database():
         report_lines.append(f"- **{table}**: {status}")
     
     # Guardar reporte en archivo Markdown
+    #report_text = "\n".join(report_lines)
+    #with open("reporte_validacion.md", "w") as f:
+        #f.write(report_text)
+
+    # Pregunta 1: Verificar que las tablas fueron creadas
+    report_lines.append("\n## 1️⃣ Verificación de Creación de Tablas")
+    expected_tables = {"actor", "categoria", "idioma", "pelicula", "pelicula_categoria", "inventario"}
+    cursor.execute("SHOW TABLES;")
+    found_tables = {table[0] for table in cursor.fetchall()}
+    status = "✅ Correcto" if expected_tables.issubset(found_tables) else "❌ Incompleto"
+    report_lines.append(f"- **Creación de tablas**: {status}")
+
+    # Pregunta 2: Verificar la inclusión de la columna 'edad' en actor
+    report_lines.append("\n## 2️⃣ Inclusión de la columna 'edad' en 'actor'")
+    cursor.execute("SHOW COLUMNS FROM actor LIKE 'edad';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result and result[1] == "int" and result[2] == "NO" else "❌ Incorrecto"
+    report_lines.append(f"- **Columna 'edad'**: {status}")
+
+    # Pregunta 3: Verificar eliminación de 'apellidos' y creación de 'apellido1' y 'apellido2'
+    report_lines.append("\n## 3️⃣ Modificación de columnas en 'actor'")
+    cursor.execute("SHOW COLUMNS FROM actor LIKE 'apellidos';")
+    result = cursor.fetchone()
+    apellidos_status = "✅ Eliminada" if not result else "❌ Aún existe"
+    
+    cursor.execute("SHOW COLUMNS FROM actor LIKE 'apellido1';")
+    result1 = cursor.fetchone()
+    apellido1_status = "✅ Correcto" if result1 and result1[1] == "varchar(45)" and result1[2] == "NO" else "❌ Incorrecto"
+
+    cursor.execute("SHOW COLUMNS FROM actor LIKE 'apellido2';")
+    result2 = cursor.fetchone()
+    apellido2_status = "✅ Correcto" if result2 and result2[1] == "varchar(45)" and result2[2] == "NO" else "❌ Incorrecto"
+
+    report_lines.append(f"- **Columna 'apellidos' eliminada**: {apellidos_status}")
+    report_lines.append(f"- **Columna 'apellido1' creada**: {apellido1_status}")
+    report_lines.append(f"- **Columna 'apellido2' creada**: {apellido2_status}")
+
+    # Pregunta 4: Verificar inclusión de la columna 'id_pelicula' en inventario
+    report_lines.append("\n## 4️⃣ Relación entre 'inventario' y 'pelicula'")
+    cursor.execute("SHOW COLUMNS FROM inventario LIKE 'id_pelicula';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result and result[1] == "smallint(5) unsigned" and result[2] == "NO" else "❌ Incorrecto"
+    report_lines.append(f"- **Columna 'id_pelicula' añadida**: {status}")
+
+    # Pregunta 5: Verificar creación de 'pelicula_actor'
+    report_lines.append("\n## 5️⃣ Creación de 'pelicula_actor'")
+    cursor.execute("SHOW TABLES LIKE 'pelicula_actor';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result else "❌ Faltante"
+    report_lines.append(f"- **Tabla 'pelicula_actor'**: {status}")
+
+    # Pregunta 6: Verificar modificación de 'nombre' en 'categoria'
+    report_lines.append("\n## 6️⃣ Modificación de 'nombre' en 'categoria'")
+    cursor.execute("SHOW COLUMNS FROM categoria LIKE 'nombre';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result and result[1] == "varchar(50)" else "❌ Incorrecto"
+    report_lines.append(f"- **Cambio a VARCHAR(50)**: {status}")
+
+    # Pregunta 7: Verificar modificación de 'duracion_alquiler' en 'pelicula'
+    report_lines.append("\n## 7️⃣ Modificación de 'duracion_alquiler' en 'pelicula'")
+    cursor.execute("SHOW COLUMNS FROM pelicula LIKE 'duracion_alquiler';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result and result[1] == "int(11)" and result[4] == "3" else "❌ Incorrecto"
+    report_lines.append(f"- **Cambio a INT con valor por defecto 3**: {status}")
+
+    # Pregunta 8: Verificar modificación de 'clasificacion' en 'pelicula'
+    report_lines.append("\n## 8️⃣ Modificación de 'clasificacion' en 'pelicula'")
+    cursor.execute("SHOW COLUMNS FROM pelicula LIKE 'clasificacion';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result and "enum('G','PG','PG-13','R','NC-17')" in result[1] else "❌ Incorrecto"
+    report_lines.append(f"- **Cambio a ENUM**: {status}")
+
+    # Pregunta 9: Verificar modificación de 'caracteristicas_especiales' en 'pelicula'
+    report_lines.append("\n## 9️⃣ Modificación de 'caracteristicas_especiales' en 'pelicula'")
+    cursor.execute("SHOW COLUMNS FROM pelicula LIKE 'caracteristicas_especiales';")
+    result = cursor.fetchone()
+    status = "✅ Correcto" if result and "set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes')" in result[1] else "❌ Incorrecto"
+    report_lines.append(f"- **Cambio a SET**: {status}")
+
+    # Guardar reporte en archivo Markdown
     report_text = "\n".join(report_lines)
     with open("reporte_validacion.md", "w") as f:
         f.write(report_text)
+
+    print("\n".join(report_lines))
 
     # Si se ejecuta en GitHub Actions, escribir en el summary
     if "GITHUB_STEP_SUMMARY" in os.environ:
