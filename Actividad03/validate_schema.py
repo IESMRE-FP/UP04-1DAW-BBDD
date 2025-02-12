@@ -72,7 +72,7 @@ def validate_database():
     
     # Guardar reporte en archivo Markdown
     report_text = "\n".join(report_lines)
-    with open("reporte_validacion_universidad.md", "w") as f:
+    with open("reporte_validacion.md", "w") as f:
         f.write(report_text)
 
     # Si se ejecuta en GitHub Actions, escribir en el summary
