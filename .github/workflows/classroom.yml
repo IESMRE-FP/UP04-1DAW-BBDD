@@ -39,11 +39,11 @@ jobs:
 
     - name: Execute SQL script
       run: |
-        mysql -h 127.0.0.1 -u root -proot jardineria < Actividad03/universidad.sql
+        mysql -h 127.0.0.1 -u root -proot universidad < Actividad05/universidad.sql
 
     - name: Validate table structure
       run: |
-        mysql -h 127.0.0.1 -u root -proot jardineria -e "SHOW TABLES;"
+        mysql -h 127.0.0.1 -u root -proot universidad -e "SHOW TABLES;"
         
     # CONFIGURAR PYTHON E INSTALAR DEPENDENCIAS
     - name: Set up Python
@@ -56,7 +56,7 @@ jobs:
 
     # EJECUTAR VALIDACIÓN DE BASE DE DATOS
     - name: Validate database schema
-      run: python Actividad03/validate_schema.py
+      run: python Actividad05/validate_schema.py
 
     #- name: Show Report in Summary
     #  run: |
