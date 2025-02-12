@@ -1,5 +1,5 @@
 
-name: Test Base de Datos Jardinería
+name: Test Base de Datos Universidad
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: jardineria
+          MYSQL_DATABASE: universidad
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=5
@@ -39,7 +39,7 @@ jobs:
 
     - name: Execute SQL script
       run: |
-        mysql -h 127.0.0.1 -u root -proot jardineria < jardineria.sql
+        mysql -h 127.0.0.1 -u root -proot jardineria < Actividad03/universidad.sql
 
     - name: Validate table structure
       run: |
@@ -56,7 +56,7 @@ jobs:
 
     # EJECUTAR VALIDACIÓN DE BASE DE DATOS
     - name: Validate database schema
-      run: python validate_schema.py
+      run: python Actividad03/validate_schema.py
 
     #- name: Show Report in Summary
     #  run: |
