@@ -3,10 +3,10 @@ import mysql.connector
 
 def validate_database():
     expected_tables = {
-        "pais": {"id_pais", "nombre", "ultima_actualizacion"},
-        "ciudad": {"id_ciudad", "nombre", "ultima_actualizacion"},
-        "direccion": {"id_direccion", "direccion", "direccion2", "distrito", "codigo_postal", "telefono", "ultima_actualizacion"},
-        "cliente": {"id_cliente", "nombre", "apellidos", "email", "id_direccion", "activo", "fecha_creacion", "ultima_actualizacion"},
+        "pais": {"id_pais", "nombre", "ultima_actualizacion","num_habitantes"},
+        "ciudad": {"id_ciudad", "nombre", "ultima_actualizacion","id_pais","num_habitantes"},
+        "direccion": {"id_direccion", "direccion", "direccion2", "distrito", "codigo_postal", "telefono", "ultima_actualizacion","id_ciudad"},
+        "cliente": {"id_cliente", "nombre", "apellido1","apellido2", "email", "id_direccion", "activo", "fecha_creacion", "ultima_actualizacion"},
     }
 
     expected_primary_keys = {
