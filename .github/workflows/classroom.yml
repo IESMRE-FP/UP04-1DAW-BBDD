@@ -18,7 +18,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: clientes
+          MYSQL_DATABASE: testdb
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=5
@@ -39,11 +39,11 @@ jobs:
 
     - name: Execute SQL script
       run: |
-        mysql -h 127.0.0.1 -u root -proot clientes < Actividad06/clientes.sql
+        mysql -h 127.0.0.1 -u root -proot testdb < Actividad04/permisos.sql
 
     - name: Validate table structure
       run: |
-        mysql -h 127.0.0.1 -u root -proot clientes -e "SHOW TABLES;"
+        mysql -h 127.0.0.1 -u root -proot testdb -e "SHOW TABLES;"
         
     # CONFIGURAR PYTHON E INSTALAR DEPENDENCIAS
     - name: Set up Python
@@ -56,7 +56,7 @@ jobs:
 
     # EJECUTAR VALIDACIÓN DE BASE DE DATOS
     - name: Validate database schema
-      run: python Actividad06/validate_schema.py
+      run: python Actividad04/validate_schema.py
 
     #- name: Show Report in Summary
     #  run: |
